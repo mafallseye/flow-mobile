@@ -3,7 +3,7 @@ import { Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import { LogOut, Moon, Plus, Sun } from 'lucide-react-native';
+import { LogOut, Moon, Plus, QrCode, Sun } from 'lucide-react-native';
 import { supabase } from '../lib/supabase';
 import { useTasks } from '../lib/useTasks';
 import { VIEWS, countByView, sortTasks } from '../lib/views';
@@ -13,6 +13,7 @@ import { useToast } from './Toast';
 import TaskItem from './TaskItem';
 import ComposerSheet from './ComposerSheet';
 import ProgressRing from './ProgressRing';
+import ShareQRModal from './ShareQRModal';
 
 const DEFAULT_DUE = { today: () => todayISO(), upcoming: () => addDaysISO(1) };
 const TAB_H = 64;
@@ -26,6 +27,7 @@ export default function HomeScreen({ user }) {
 
   const [viewId, setViewId] = useState('today');
   const [sheet, setSheet] = useState(false);
+  const [qr, setQr] = useState(false);
 
   const view = VIEWS.find((v) => v.id === viewId);
   const counts = useMemo(() => countByView(tasks), [tasks]);
@@ -75,6 +77,9 @@ export default function HomeScreen({ user }) {
             {greeting()}, <Text style={{ color: colors.primary }}>{name}</Text>
           </Text>
         </View>
+        <Pressable onPress={() => setQr(true)} style={styles.iconBtn} hitSlop={6} accessibilityLabel="Partager Flow (QR code)">
+          <QrCode size={21} color={colors.text2} />
+        </Pressable>
         <Pressable onPress={toggle} style={styles.iconBtn} hitSlop={6} accessibilityLabel="Changer de thème">
           {colors.mode === 'dark' ? <Sun size={21} color={colors.text2} /> : <Moon size={21} color={colors.text2} />}
         </Pressable>
@@ -173,6 +178,7 @@ export default function HomeScreen({ user }) {
         })}
       </View>
 
+      <ShareQRModal visible={qr} onClose={() => setQr(false)} />
       <ComposerSheet visible={sheet} onClose={() => setSheet(false)} onSubmit={addTask} defaultDue={defaultDue} />
     </View>
   );
