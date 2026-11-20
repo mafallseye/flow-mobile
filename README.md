@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/banner.png" alt="Flow Mobile — Gestion de tâches iOS / Android synchronisée en temps réel" width="100%"></p>
+
 # 📱 Flow Mobile — React Native (Expo) + Supabase
 
 Version native iOS / Android de [Flow](https://task-app-nine-omega.vercel.app).
